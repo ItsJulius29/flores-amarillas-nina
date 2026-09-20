@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "Flores Amarillas",
+    "slug": "flores-amarillas",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "backgroundColor": "#0B0710",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.juliocampos.floresamarillas"
+    },
+    "android": {
+      "package": "com.juliocampos.floresamarillas",
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "owner": "itsjulius29s-team"
+  }
+}
