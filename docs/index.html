@@ -47,11 +47,28 @@
     <div class="col fill">
       <h1 class="page-title">Nuestro <em>ramo</em></h1>
       <p class="hint" id="bouquetHint">Toca en cualquier lugar para sembrar flores</p>
+      <div class="chips" id="chips" role="group" aria-label="Tipo de flor"></div>
       <div class="canvas" id="canvas"></div>
     </div>
-    <div class="col row">
-      <button class="btn btn-fill" id="surprise">Ramo sorpresa</button>
-      <button class="btn" id="clear">Limpiar</button>
+    <div class="col actions">
+      <div class="pair">
+        <button class="btn" id="surprise">Ramo sorpresa</button>
+        <button class="btn" id="clear">Limpiar</button>
+      </div>
+      <button class="btn btn-fill" id="makeBouquet">Formar mi ramo</button>
+    </div>
+  </section>
+
+  <section class="screen" id="ramo">
+    <header class="col bar"><a class="back" href="#bouquet"><span aria-hidden="true">←</span> Seguir editando</a></header>
+    <div class="col">
+      <h1 class="page-title">Tu <em>ramo</em></h1>
+      <div class="bouquet-wrap" id="bouquetView"></div>
+      <p class="hint center-text" id="saveMsg" aria-live="polite">Hecho con las flores que sembraste. También puedes hacer una captura.</p>
+      <div class="actions">
+        <button class="btn btn-fill" id="saveImg">Guardar imagen</button>
+        <button class="btn" id="shareImg" hidden>Compartir</button>
+      </div>
     </div>
   </section>
 
