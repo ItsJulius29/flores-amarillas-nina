@@ -5,39 +5,42 @@
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const buzz = (ms) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const pad = (n) => String(n + 1).padStart(2, '0');
 
-  /* ---------- Flores SVG ---------- */
+  /* ---------- Flores (planas, de dos capas) ---------- */
+  function layer(n, cy, rx, ry, fill, offset) {
+    let s = '';
+    for (let i = 0; i < n; i++) {
+      s += '<ellipse cx="50" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="' + fill + '" transform="rotate(' + ((360 / n) * i + offset) + ' 50 50)"/>';
+    }
+    return s;
+  }
   function flowerSVG(type) {
+    let inner;
     if (type === 'rose') {
-      let r = '<svg viewBox="0 0 100 100">';
-      for (let i = 0; i < 8; i++) r += '<ellipse cx="50" cy="26" rx="17" ry="21" fill="#FFFFFF" stroke="#D9C8EC" stroke-width="1.3" transform="rotate(' + i * 45 + ' 50 50)"/>';
-      for (let i = 0; i < 6; i++) r += '<ellipse cx="50" cy="35" rx="12" ry="14" fill="#FBF7FF" stroke="#CDB8E3" stroke-width="1.3" transform="rotate(' + (i * 60 + 20) + ' 50 50)"/>';
-      for (let i = 0; i < 4; i++) r += '<ellipse cx="50" cy="42" rx="8" ry="9" fill="#F4EAFB" stroke="#C2A9DE" stroke-width="1.2" transform="rotate(' + (i * 90 + 45) + ' 50 50)"/>';
-      return r + '<circle cx="50" cy="50" r="5" fill="#E2CDF3" stroke="#B99BD9" stroke-width="1"/></svg>';
+      inner = layer(8, 26, 17, 21, '#FFFFFF', 0).replace(/\/>/g, ' stroke="#DCCFEB" stroke-width="1"/>') +
+        layer(6, 35, 12, 14, '#FAF6FE', 20).replace(/\/>/g, ' stroke="#CFBDE4" stroke-width="1"/>') +
+        layer(4, 42, 8, 9, '#F1E7FA', 45).replace(/\/>/g, ' stroke="#C2A9DE" stroke-width="1"/>') +
+        '<circle cx="50" cy="50" r="4.5" fill="#DFCBF1"/>';
+    } else if (type === 'lilac') {
+      inner = layer(5, 30, 13, 17, '#B79CE0', 0) + layer(5, 34, 9.5, 12, '#CDB7EC', 36) + '<circle cx="50" cy="50" r="6" fill="#F2C94C"/>';
+    } else {
+      inner = layer(10, 27, 7.5, 20, '#E3B32F', 0) + layer(10, 30, 6.5, 16, '#F5D565', 18) +
+        '<circle cx="50" cy="50" r="10" fill="#3A2708"/><circle cx="50" cy="50" r="4.5" fill="#6B4A12"/>';
     }
-    const cfg = type === 'lilac'
-      ? { n: 5, fill: '#C8A2F0', edge: '#7A4BC4', rx: 14, ry: 15, cr: 9, center: '#FFD93B', core: '#F5B700' }
-      : { n: 12, fill: '#FFD93B', edge: '#F5B700', rx: 8, ry: 17, cr: 13, center: '#7A4A00', core: '#A86A00' };
-    let petals = '';
-    for (let i = 0; i < cfg.n; i++) {
-      petals += '<ellipse cx="50" cy="30" rx="' + cfg.rx + '" ry="' + cfg.ry + '" fill="' + cfg.fill + '" stroke="' + cfg.edge +
-        '" stroke-width="1" transform="rotate(' + (360 / cfg.n) * i + ' 50 50)"/>';
-    }
-    return '<svg viewBox="0 0 100 100">' + petals + '<circle cx="50" cy="50" r="' + cfg.cr + '" fill="' + cfg.center +
-      '"/><circle cx="50" cy="50" r="' + cfg.cr / 2 + '" fill="' + cfg.core + '" opacity=".7"/></svg>';
+    return '<svg viewBox="0 0 100 100">' + inner + '</svg>';
   }
 
-  /* ---------- Pétalos de fondo ---------- */
+  /* ---------- Pétalos suaves (solo en la portada) ---------- */
   (function petals() {
     const box = $('petals');
-    const colors = ['#FFD93B', '#FFD93B', '#F5B700', '#C8A2F0'];
-    const count = window.innerWidth < 600 ? 14 : 26;
-    for (let i = 0; i < count; i++) {
+    const colors = ['#F2C94C', '#F2C94C', '#B79CE0'];
+    for (let i = 0; i < 9; i++) {
       const p = document.createElement('div');
-      const size = 8 + Math.random() * 10;
+      const size = 6 + Math.random() * 7;
       p.className = 'petal';
       p.style.cssText = 'left:' + Math.random() * 100 + '%;width:' + size + 'px;height:' + size * 1.5 + 'px;background:' + colors[i % colors.length] +
-        ';--sway:' + (20 + Math.random() * 40) + 'px;animation-duration:' + (8 + Math.random() * 7) + 's;animation-delay:-' + Math.random() * 15 + 's';
+        ';--sway:' + (16 + Math.random() * 30) + 'px;animation-duration:' + (14 + Math.random() * 8) + 's;animation-delay:-' + Math.random() * 20 + 's';
       box.appendChild(p);
     }
   })();
@@ -45,27 +48,26 @@
   /* ---------- Textos iniciales ---------- */
   $('heroFlower').innerHTML = flowerSVG('yellow');
   $('forName').textContent = 'Para ' + HER_NAME;
-  $('hello').textContent = 'Hola, ' + HER_NAME + ' 💛';
+  $('hello').textContent = 'Hola, ' + HER_NAME;
 
   /* ---------- Ramo ---------- */
   const canvas = $('canvas');
   const TYPES = ['yellow', 'yellow', 'lilac', 'rose'];
   const MAX_FLOWERS = 250;
-  let count = 0;
 
+  function updateHint() {
+    const n = canvas.children.length;
+    $('bouquetHint').textContent = n === 0 ? 'Toca en cualquier lugar para sembrar flores' : n + (n === 1 ? ' flor para ti' : ' flores para ti');
+  }
   function plant(x, y, delay) {
     if (canvas.children.length >= MAX_FLOWERS) canvas.removeChild(canvas.firstChild);
-    const size = 80 * (0.7 + Math.random() * 0.7);
+    const size = 78 * (0.72 + Math.random() * 0.6);
     const f = document.createElement('div');
     f.className = 'flower';
     f.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + size + 'px;height:' + size + 'px;--rot:' + Math.floor(Math.random() * 360) + 'deg;animation-delay:' + (delay || 0) + 'ms';
     f.innerHTML = flowerSVG(pick(TYPES));
     canvas.appendChild(f);
-    count++;
     updateHint();
-  }
-  function updateHint() {
-    $('bouquetHint').textContent = canvas.children.length === 0 ? 'Toca en cualquier lugar para sembrar flores 🌼' : canvas.children.length + ' flores para ti 💛';
   }
   canvas.addEventListener('pointerdown', (e) => {
     const r = canvas.getBoundingClientRect();
@@ -80,11 +82,11 @@
   $('clear').addEventListener('click', () => { canvas.innerHTML = ''; updateHint(); });
 
   /* ---------- Favoritos ---------- */
-  $('favGrid').innerHTML = FAVORITES.map((f) =>
+  $('favGrid').innerHTML = FAVORITES.map((f, i) =>
     '<div class="flip" role="button" tabindex="0" aria-pressed="false"><div class="flip-inner">' +
-    '<div class="face front"><span class="em">' + f.emoji + '</span><b>' + esc(f.title) + '</b></div>' +
+    '<div class="face front"><span class="num">' + pad(i) + '</span><b>' + esc(f.title) + '</b></div>' +
     '<div class="face back-face"><span>' + esc(f.back) + '</span>' +
-    (f.link ? '<a href="' + esc(f.link) + '" target="_blank" rel="noopener">▶ Escuchar</a>' : '') + '</div></div></div>'
+    (f.link ? '<a href="' + esc(f.link) + '" target="_blank" rel="noopener">Escuchar ↗</a>' : '') + '</div></div></div>'
   ).join('');
   document.querySelectorAll('.flip').forEach((card) => {
     const toggle = () => { card.classList.toggle('open'); card.setAttribute('aria-pressed', card.classList.contains('open')); buzz(8); };
@@ -92,15 +94,15 @@
     card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
   });
 
-  /* ---------- Carta (se vuelve a dibujar para reiniciar la animación) ---------- */
+  /* ---------- Carta (se redibuja para reiniciar la animación) ---------- */
   function renderLetter() {
-    let html = '<h3 class="to">Para ' + esc(HER_NAME) + ',</h3>';
+    let html = '<h2 class="to">Para ' + esc(HER_NAME) + ',</h2>';
     LETTER.forEach((t, i) => { html += '<p class="line" style="animation-delay:' + (0.4 + i * 1.1) + 's">' + esc(t) + '</p>'; });
-    html += '<div class="sign" style="animation-delay:' + (0.4 + LETTER.length * 1.1) + 's">Con todo mi cariño,<br>' + esc(MY_NAME) + ' 💛</div>';
+    html += '<div class="sign" style="animation-delay:' + (0.4 + LETTER.length * 1.1) + 's">Con todo mi cariño,<br>' + esc(MY_NAME) + '</div>';
     $('paper').innerHTML = html;
     if (TOGETHER_SINCE) {
       const days = Math.floor((Date.now() - new Date(TOGETHER_SINCE + 'T00:00:00').getTime()) / 86400000);
-      $('counter').innerHTML = '<span class="days">' + days + '</span><span>días juntos y contando 💜</span>';
+      $('counter').innerHTML = '<span class="days">' + days + '</span><p class="label">días juntos y contando</p>';
       $('counter').hidden = false;
     }
   }
@@ -110,8 +112,9 @@
   try { used = JSON.parse(localStorage.getItem('vales') || '{}'); } catch (e) {}
   function renderCoupons() {
     $('couponList').innerHTML = COUPONS.map((c, i) =>
-      '<div class="ticket' + (used[i] ? ' done' : '') + '"><span class="em">' + c.emoji + '</span><div><b>' + esc(c.title) + '</b><small>' + esc(c.text) + '</small></div>' +
-      (used[i] ? '<span class="stamp">¡CANJEADO!</span>' : '<button data-i="' + i + '">Canjear</button>') + '</div>'
+      '<div class="ticket' + (used[i] ? ' done' : '') + '"><span class="num">' + pad(i) + '</span>' +
+      '<div class="txt"><b>' + esc(c.title) + '</b><small>' + esc(c.text) + '</small></div>' +
+      (used[i] ? '<span class="done-label">Canjeado</span>' : '<button data-i="' + i + '">Canjear</button>') + '</div>'
     ).join('');
   }
   $('couponList').addEventListener('click', (e) => {
@@ -136,7 +139,7 @@
     buzz([20, 40, 20]);
   });
 
-  /* ---------- Navegación por hash (el botón atrás del navegador funciona) ---------- */
+  /* ---------- Navegación por hash ---------- */
   const screens = ['intro', 'home', 'bouquet', 'favorites', 'letter', 'coupons', 'wish'];
   function route() {
     const name = location.hash.slice(1);

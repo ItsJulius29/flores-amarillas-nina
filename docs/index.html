@@ -3,82 +3,91 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Flores Amarillas 💛</title>
+  <title>Flores Amarillas</title>
   <meta name="description" content="Un regalo para el Día de las Flores Amarillas">
-  <meta name="theme-color" content="#0B0710">
+  <meta name="theme-color" content="#0D0A12">
+  <meta name="color-scheme" content="dark">
   <meta name="robots" content="noindex">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌼</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23F2C94C'/><circle cx='50' cy='50' r='14' fill='%230D0A12'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="petals" aria-hidden="true"></div>
 
   <section class="screen" id="intro">
+    <div class="petals" id="petals" aria-hidden="true"></div>
     <div class="center">
-      <div class="hero-flower" id="heroFlower"></div>
-      <p class="for" id="forName"></p>
-      <h1 class="title">Feliz Día de las<br>Flores Amarillas</h1>
-      <p class="sub">Hice esto solo para ti 💛</p>
-      <a class="btn btn-fill" href="#home">Abrir mi regalo 🌼</a>
+      <div class="hero-flower" id="heroFlower" aria-hidden="true"></div>
+      <p class="label" id="forName"></p>
+      <h1 class="display">Feliz Día de las<br><em>Flores Amarillas</em></h1>
+      <a class="btn btn-fill" href="#home">Abrir mi regalo</a>
+      <p class="label foot">21 de septiembre</p>
     </div>
   </section>
 
   <section class="screen" id="home">
-    <header class="bar"><a class="back" href="#intro" aria-label="Volver">‹</a><h2>Flores Amarillas</h2><span class="back ghost"></span></header>
-    <div class="wrap">
-      <p class="hello" id="hello"></p>
-      <p class="sub">Elige una sorpresa</p>
+    <header class="col bar"><a class="back" href="#intro"><span aria-hidden="true">←</span> Inicio</a></header>
+    <div class="col">
+      <p class="label" id="hello"></p>
+      <h1 class="page-title">Elige una <em>sorpresa</em></h1>
       <nav class="menu">
-        <a class="menu-card" href="#bouquet"><span class="em">💐</span><span><b>Nuestro ramo</b><small>Toca y siembra flores</small></span><i>›</i></a>
-        <a class="menu-card" href="#favorites"><span class="em">💜</span><span><b>Todo lo que te gusta</b><small>Voltea cada tarjeta</small></span><i>›</i></a>
-        <a class="menu-card" href="#letter"><span class="em">💌</span><span><b>Una carta para ti</b><small>Léela con calma</small></span><i>›</i></a>
-        <a class="menu-card" href="#coupons"><span class="em">🎟️</span><span><b>Vales de regalo</b><small>Canjéalos cuando quieras</small></span><i>›</i></a>
-        <a class="menu-card" href="#wish"><span class="em">🌟</span><span><b>Pide un deseo</b><small>Toca la estrella</small></span><i>›</i></a>
+        <a href="#bouquet"><span class="num">01</span><span class="txt"><b>Nuestro ramo</b><small>Toca y siembra flores</small></span><span class="arr" aria-hidden="true">→</span></a>
+        <a href="#favorites"><span class="num">02</span><span class="txt"><b>Todo lo que te gusta</b><small>Voltea cada tarjeta</small></span><span class="arr" aria-hidden="true">→</span></a>
+        <a href="#letter"><span class="num">03</span><span class="txt"><b>Una carta para ti</b><small>Léela con calma</small></span><span class="arr" aria-hidden="true">→</span></a>
+        <a href="#coupons"><span class="num">04</span><span class="txt"><b>Vales de regalo</b><small>Canjéalos cuando quieras</small></span><span class="arr" aria-hidden="true">→</span></a>
+        <a href="#wish"><span class="num">05</span><span class="txt"><b>Pide un deseo</b><small>Toca la estrella</small></span><span class="arr" aria-hidden="true">→</span></a>
       </nav>
     </div>
   </section>
 
-  <section class="screen" id="bouquet">
-    <header class="bar"><a class="back" href="#home" aria-label="Volver">‹</a><h2>Nuestro ramo</h2><span class="back ghost"></span></header>
-    <p class="hint" id="bouquetHint">Toca en cualquier lugar para sembrar flores 🌼</p>
-    <div class="canvas" id="canvas"></div>
-    <div class="row">
-      <button class="btn btn-fill" id="surprise">Ramo sorpresa ✨</button>
+  <section class="screen wide" id="bouquet">
+    <header class="col bar"><a class="back" href="#home"><span aria-hidden="true">←</span> Inicio</a></header>
+    <div class="col fill">
+      <h1 class="page-title">Nuestro <em>ramo</em></h1>
+      <p class="hint" id="bouquetHint">Toca en cualquier lugar para sembrar flores</p>
+      <div class="canvas" id="canvas"></div>
+    </div>
+    <div class="col row">
+      <button class="btn btn-fill" id="surprise">Ramo sorpresa</button>
       <button class="btn" id="clear">Limpiar</button>
     </div>
   </section>
 
-  <section class="screen" id="favorites">
-    <header class="bar"><a class="back" href="#home" aria-label="Volver">‹</a><h2>Lo que te gusta</h2><span class="back ghost"></span></header>
-    <div class="wrap wide">
-      <p class="hint">Toca una tarjeta para voltearla 💜</p>
+  <section class="screen wide" id="favorites">
+    <header class="col bar"><a class="back" href="#home"><span aria-hidden="true">←</span> Inicio</a></header>
+    <div class="col">
+      <h1 class="page-title">Todo lo que <em>te gusta</em></h1>
+      <p class="hint">Toca una tarjeta para voltearla</p>
       <div class="grid" id="favGrid"></div>
     </div>
   </section>
 
   <section class="screen" id="letter">
-    <header class="bar"><a class="back" href="#home" aria-label="Volver">‹</a><h2>Una carta</h2><span class="back ghost"></span></header>
-    <div class="wrap">
+    <header class="col bar"><a class="back" href="#home"><span aria-hidden="true">←</span> Inicio</a></header>
+    <div class="col">
+      <h1 class="page-title">Una <em>carta</em></h1>
       <article class="paper" id="paper"></article>
       <div class="counter" id="counter" hidden></div>
     </div>
   </section>
 
   <section class="screen" id="coupons">
-    <header class="bar"><a class="back" href="#home" aria-label="Volver">‹</a><h2>Vales de regalo</h2><span class="back ghost"></span></header>
-    <div class="wrap">
-      <p class="hint">Toca “Canjear” para usar un vale 🎟️</p>
+    <header class="col bar"><a class="back" href="#home"><span aria-hidden="true">←</span> Inicio</a></header>
+    <div class="col">
+      <h1 class="page-title">Vales de <em>regalo</em></h1>
+      <p class="hint">Toca “Canjear” para usar un vale</p>
       <div id="couponList"></div>
     </div>
   </section>
 
   <section class="screen" id="wish">
-    <header class="bar"><a class="back" href="#home" aria-label="Volver">‹</a><h2>Pide un deseo</h2><span class="back ghost"></span></header>
+    <header class="col bar"><a class="back" href="#home"><span aria-hidden="true">←</span> Inicio</a></header>
     <div class="center">
-      <button class="star" id="star" aria-label="Pedir un deseo">🌟</button>
+      <button class="star" id="star" aria-label="Pedir un deseo">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 C53 34 66 47 96 50 C66 53 53 66 50 96 C47 66 34 53 4 50 C34 47 47 34 50 4Z"/></svg>
+      </button>
       <p class="wish-text" id="wishText">Cierra los ojos, piensa en algo bonito y toca la estrella</p>
     </div>
   </section>
