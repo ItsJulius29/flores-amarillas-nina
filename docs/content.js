@@ -56,3 +56,8 @@ const CHARACTERS = {
   her: { skin: '#D9A074', hair: '#1B1420', style: 'curls', outfit: '#EFE4D3', pants: '#8FB0D4', glasses: false, freckles: true, flower: true },
   him: { skin: '#E2A97E', hair: '#1B1420', style: 'quiff', outfit: '#F4EFF8', pants: '#1B1420', glasses: false, flower: false },
 };
+
+// ── PLAYLIST ────────────────────────────────────────────────────────
+// ID de tu lista de YouTube (lo que va después de "list=" en el enlace).
+// Debe ser pública o "no listada". Déjalo vacío ('') para ocultar la sección.
+const PLAYLIST_ID = 'PLB43PaGAs7iWzrtFPKyqn3MbFRCaPcFS2';

@@ -284,7 +284,24 @@
     card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
   });
 
+  /* ---------- Música (YouTube se carga solo al entrar) ---------- */
+  function loadMusic() {
+    if (typeof PLAYLIST_ID === 'undefined' || !PLAYLIST_ID) return;
+    const fr = $('ytFrame');
+    if (!fr.src) fr.src = 'https://www.youtube.com/embed/videoseries?list=' + encodeURIComponent(PLAYLIST_ID);
+    $('ytLink').href = 'https://www.youtube.com/playlist?list=' + encodeURIComponent(PLAYLIST_ID);
+  }
+
   /* ---------- Carta (se redibuja para reiniciar la animación) ---------- */
+  // Próximo aniversario a partir de TOGETHER_SINCE ('AAAA-MM-DD')
+  function nextAnniversary() {
+    const p = TOGETHER_SINCE.split('-').map(Number);
+    const now = new Date(), today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    let n = now.getFullYear() - p[0];
+    if (Date.UTC(p[0] + n, p[1] - 1, p[2]) < today) n++;
+    if (n < 1) return null;
+    return { years: n, days: Math.round((Date.UTC(p[0] + n, p[1] - 1, p[2]) - today) / 86400000) };
+  }
   function renderLetter() {
     let html = '<h2 class="to">Para ' + esc(HER_NAME) + ',</h2>';
     LETTER.forEach((t, i) => { html += '<p class="line" style="animation-delay:' + (0.4 + i * 1.1) + 's">' + esc(t) + '</p>'; });
@@ -292,7 +309,12 @@
     $('paper').innerHTML = html;
     if (TOGETHER_SINCE) {
       const days = Math.floor((Date.now() - new Date(TOGETHER_SINCE + 'T00:00:00').getTime()) / 86400000);
-      $('counter').innerHTML = '<span class="days">' + days + '</span><p class="label">días juntos y contando</p>';
+      const nx = nextAnniversary();
+      const yrs = nx ? nx.years + (nx.years === 1 ? ' año' : ' años') : '';
+      const soon = !nx ? '' : nx.days === 0 ? 'Hoy cumplimos <em>' + yrs + '</em> juntos'
+        : nx.days === 1 ? 'Mañana cumplimos <em>' + yrs + '</em> juntos'
+        : 'Faltan <em>' + nx.days + ' días</em> para cumplir ' + yrs + ' juntos';
+      $('counter').innerHTML = '<span class="days">' + days + '</span><p class="label">días juntos y contando</p>' + (soon ? '<p class="next">' + soon + '</p>' : '');
       $('counter').hidden = false;
     }
   }
@@ -332,10 +354,11 @@
   /* ---------- Menú y navegación por hash ---------- */
   const FA = window.FA = {
     $, esc, buzz, pick, pad, flowerInner, flowerSVG,
-    hooks: { letter: renderLetter, ramo: renderBouquet },
+    hooks: { letter: renderLetter, ramo: renderBouquet, music: loadMusic },
     menu: [
       { id: 'bouquet', order: 10, title: 'Nuestro ramo', text: 'Toca y siembra flores' },
       { id: 'favorites', order: 20, title: 'Todo lo que te gusta', text: 'Voltea cada tarjeta' },
+      ...(typeof PLAYLIST_ID !== 'undefined' && PLAYLIST_ID ? [{ id: 'music', order: 45, title: 'Nuestra playlist', text: 'Música para escuchar juntos' }] : []),
       { id: 'letter', order: 50, title: 'Una carta para ti', text: 'Léela con calma' },
       { id: 'coupons', order: 60, title: 'Vales de regalo', text: 'Canjéalos cuando quieras' },
       { id: 'wish', order: 70, title: 'Pide un deseo', text: 'Toca la estrella' },
