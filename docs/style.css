@@ -286,3 +286,26 @@ h1, .ticket b, .menu b, .wish-text { text-wrap: balance; }
 .sound.on { color: var(--accent); border-color: var(--accent); }
 .sound.nudge { color: var(--accent); border-color: var(--accent); animation: nudge 1.4s ease-in-out infinite; }
 @keyframes nudge { 50% { box-shadow: 0 0 0 8px rgba(242, 201, 76, .15); } }
+
+/* Fondo de la pantalla de sorpresas: collage con velo oscuro */
+#home > .col { position: relative; z-index: 1; }
+.home-bg {
+  position: absolute; inset: -8px; z-index: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(13, 10, 18, .86) 0%, rgba(13, 10, 18, .80) 42%, rgba(13, 10, 18, .92) 100%),
+    url('img/collage.jpg') center top / cover no-repeat;
+  filter: blur(1.3px) saturate(.75);
+  animation: bgIn 1.4s var(--ease) both;
+}
+@keyframes bgIn { from { opacity: 0; } to { opacity: 1; } }
+@media (min-width: 900px) {
+  /* laptop: el collage vive a la derecha y se funde hacia el menú */
+  .home-bg {
+    inset: 0 0 0 auto; width: min(46vw, 760px);
+    background: linear-gradient(rgba(13, 10, 18, .60), rgba(13, 10, 18, .60)), url('img/collage.jpg') center / cover no-repeat;
+    filter: saturate(.75);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 46%);
+    mask-image: linear-gradient(to right, transparent 0, #000 46%);
+  }
+  #home > .col { margin-left: max(24px, 9vw); margin-right: auto; max-width: 560px; }
+}
