@@ -32,13 +32,7 @@
     <div class="col">
       <p class="label" id="hello"></p>
       <h1 class="page-title">Elige una <em>sorpresa</em></h1>
-      <nav class="menu">
-        <a href="#bouquet"><span class="num">01</span><span class="txt"><b>Nuestro ramo</b><small>Toca y siembra flores</small></span><span class="arr" aria-hidden="true">→</span></a>
-        <a href="#favorites"><span class="num">02</span><span class="txt"><b>Todo lo que te gusta</b><small>Voltea cada tarjeta</small></span><span class="arr" aria-hidden="true">→</span></a>
-        <a href="#letter"><span class="num">03</span><span class="txt"><b>Una carta para ti</b><small>Léela con calma</small></span><span class="arr" aria-hidden="true">→</span></a>
-        <a href="#coupons"><span class="num">04</span><span class="txt"><b>Vales de regalo</b><small>Canjéalos cuando quieras</small></span><span class="arr" aria-hidden="true">→</span></a>
-        <a href="#wish"><span class="num">05</span><span class="txt"><b>Pide un deseo</b><small>Toca la estrella</small></span><span class="arr" aria-hidden="true">→</span></a>
-      </nav>
+      <nav class="menu" id="menu"></nav>
     </div>
   </section>
 
@@ -81,6 +75,26 @@
     </div>
   </section>
 
+  <section class="screen wide" id="world">
+    <header class="col bar"><a class="back" href="#home"><span aria-hidden="true">←</span> Inicio</a></header>
+    <div class="col fill">
+      <h1 class="page-title">Nuestro <em>mundito</em></h1>
+      <p class="hint">Arrastra a los muñequitos, tócalos y acércalos</p>
+      <div class="chips" id="sceneChips"></div>
+      <div class="stage" id="stage" data-scene="winter"></div>
+    </div>
+    <div class="col">
+      <div class="tray" id="tray" role="group" aria-label="Objetos"></div>
+      <div class="actions">
+        <div class="pair">
+          <button class="btn sm" id="removeProp" disabled>Quitar</button>
+          <button class="btn sm" id="resetWorld">Reiniciar</button>
+          <button class="btn btn-fill sm" id="customize">Personalizar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="screen" id="letter">
     <header class="col bar"><a class="back" href="#home"><span aria-hidden="true">←</span> Inicio</a></header>
     <div class="col">
@@ -109,7 +123,19 @@
     </div>
   </section>
 
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-label="Personalizar muñequitos">
+      <div class="sheet-head"><h2>Personalizar</h2><button class="txt-btn" id="sheetClose">Listo</button></div>
+      <div class="chips" id="whoChips"></div>
+      <div class="preview" id="preview"></div>
+      <div id="editor"></div>
+      <div class="sheet-foot" id="sheetFoot"></div>
+    </div>
+  </div>
+
   <script src="content.js"></script>
   <script src="app.js"></script>
+  <script src="world.js"></script>
+  <script>FA.start();</script>
 </body>
 </html>

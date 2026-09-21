@@ -46,3 +46,13 @@ const WISHES = [
   'Que nos alcance la vida para ver todos los animes.',
   'Que cada flor amarilla te recuerde lo mucho que te quiero.',
 ];
+
+// ── MUÑEQUITOS ("Nuestro mundito") ──────────────────────────────────
+// Puedes ajustarlos en la página con el botón "Personalizar".
+// Para verlos igual en el celular de ella, abre la página con ?editor al final,
+// personaliza, presiona "Copiar" y pega el resultado aquí.
+// style: 'curls' | 'long' | 'short' | 'quiff' | 'bun' | 'tails'
+const CHARACTERS = {
+  her: { skin: '#D9A074', hair: '#1B1420', style: 'curls', outfit: '#EFE4D3', pants: '#8FB0D4', glasses: false, freckles: true, flower: true },
+  him: { skin: '#E2A97E', hair: '#1B1420', style: 'quiff', outfit: '#F4EFF8', pants: '#1B1420', glasses: false, flower: false },
+};

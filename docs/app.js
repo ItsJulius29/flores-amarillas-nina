@@ -329,17 +329,39 @@
     buzz([20, 40, 20]);
   });
 
-  /* ---------- Navegación por hash ---------- */
-  const screens = ['intro', 'home', 'bouquet', 'ramo', 'favorites', 'letter', 'coupons', 'wish'];
+  /* ---------- Menú y navegación por hash ---------- */
+  const FA = window.FA = {
+    $, esc, buzz, pick, pad, flowerInner, flowerSVG,
+    hooks: { letter: renderLetter, ramo: renderBouquet },
+    menu: [
+      { id: 'bouquet', order: 10, title: 'Nuestro ramo', text: 'Toca y siembra flores' },
+      { id: 'favorites', order: 20, title: 'Todo lo que te gusta', text: 'Voltea cada tarjeta' },
+      { id: 'letter', order: 50, title: 'Una carta para ti', text: 'Léela con calma' },
+      { id: 'coupons', order: 60, title: 'Vales de regalo', text: 'Canjéalos cuando quieras' },
+      { id: 'wish', order: 70, title: 'Pide un deseo', text: 'Toca la estrella' },
+    ],
+  };
+
+  function renderMenu() {
+    $('menu').innerHTML = FA.menu.slice().sort((a, b) => a.order - b.order).map((m, i) =>
+      '<a href="#' + m.id + '"><span class="num">' + pad(i) + '</span><span class="txt"><b>' + esc(m.title) + '</b><small>' + esc(m.text) +
+      '</small></span><span class="arr" aria-hidden="true">→</span></a>'
+    ).join('');
+  }
+
   function route() {
     let id = location.hash.slice(1);
-    if (!screens.includes(id)) id = 'intro';
+    const sec = id && document.getElementById(id);
+    if (!sec || !sec.classList.contains('screen')) id = 'intro';
     if (id === 'ramo' && !placed.length) { location.hash = '#bouquet'; return; }
-    screens.forEach((s) => $(s).classList.toggle('active', s === id));
-    if (id === 'letter') renderLetter();
-    if (id === 'ramo') renderBouquet();
+    document.querySelectorAll('.screen').forEach((s) => s.classList.toggle('active', s.id === id));
+    if (FA.hooks[id]) FA.hooks[id]();
     window.scrollTo(0, 0);
   }
-  window.addEventListener('hashchange', route);
-  route();
+
+  FA.start = function () {
+    renderMenu();
+    window.addEventListener('hashchange', route);
+    route();
+  };
 })();
