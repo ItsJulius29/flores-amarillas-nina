@@ -17,7 +17,7 @@ const FAVORITES = [
   { emoji: '❄️', title: 'Tu estación', back: 'El invierno. Prometo abrigarte siempre y compartir mis poleras contigo.' },
   { emoji: '🐾', title: 'Tu animal', back: 'La osa, tan valiente y dormilona como tú.' }, // ← puedes poner el nombre
   { emoji: '🎧', title: 'The Weeknd', back: 'Blinding Lights suena y yo solo quiero bailar contigo.', link: 'https://open.spotify.com/search/The%20Weeknd' },
-  { emoji: '🎤', title: 'EXO', back: 'Fuerte, fuerte… ¡como lo que siento por ti! We are one 💛', link: 'https://open.spotify.com/search/EXO' },
+  { emoji: '🎤', title: 'EXO', back: 'Como “Heaven” dice: cuando miro al cielo solo pienso en ti.', link: 'https://open.spotify.com/search/EXO%20Heaven' },
   { emoji: '🏐', title: 'Vóley', back: 'Tu deporte favorito. Yo pongo el balón, tú el remate.' },
   { emoji: '⚔️', title: 'Tus animes', back: 'Shingeki no Kyojin, Kimetsu no Yaiba, Haikyuu!! y Banana Fish. Buen gusto, como siempre.' },
   { emoji: '🌸', title: 'Tu dorama', back: 'Boys Over Flowers: los chicos son mejores que las flores… pero hoy ganan las flores.' },
