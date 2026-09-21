@@ -276,3 +276,13 @@ h1, .ticket b, .menu b, .wish-text { text-wrap: balance; }
 .jp-sun { left: 47%; top: 11%; }
 .jp-fuji { left: 74%; }
 #sceneChips .chip { padding: 7px 11px; letter-spacing: .07em; font-size: .68rem; }
+
+/* Música de bienvenida */
+.bg-player { position: fixed; left: -9999px; top: 0; width: 200px; height: 200px; pointer-events: none; }
+.sound { position: fixed; z-index: 40; top: calc(env(safe-area-inset-top) + 16px); right: 16px; width: 42px; height: 42px; padding: 0; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(13, 10, 18, .7); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: var(--muted); transition: color .25s, border-color .25s; }
+.sound[hidden] { display: none; }
+.sound svg { width: 20px; height: 20px; }
+.sound:not(.on)::after { content: ''; position: absolute; width: 24px; height: 1.5px; background: currentColor; rotate: -45deg; }
+.sound.on { color: var(--accent); border-color: var(--accent); }
+.sound.nudge { color: var(--accent); border-color: var(--accent); animation: nudge 1.4s ease-in-out infinite; }
+@keyframes nudge { 50% { box-shadow: 0 0 0 8px rgba(242, 201, 76, .15); } }

@@ -66,3 +66,8 @@ const PLAYLIST_ID = 'PLB43PaGAs7iWzrtFPKyqn3MbFRCaPcFS2';
 
 // ID de tu playlist de Spotify (lo que va después de "playlist/" en el enlace). '' para ocultarla.
 const SPOTIFY_ID = '1EolYSmfYm7IknQeCLlAfm';
+
+// ── CANCIÓN DE BIENVENIDA ───────────────────────────────────────────
+// Suena al tocar "Abrir mi regalo". Pega el ID del video de YouTube (lo que va después de "v=").
+// start: segundo en el que empieza (opcional). volume: 0 a 100. Con id '' no suena nada.
+const INTRO_SONG = { id: 'S7gMzYqXIZc', start: 0, volume: 70 };
