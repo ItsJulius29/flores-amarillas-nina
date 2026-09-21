@@ -237,6 +237,16 @@
     g.fillText('21 DE SEPTIEMBRE', W / 2, 1470);
     return new Promise((res) => cv.toBlob(res, 'image/png'));
   }
+  const download = (blob, name) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  };
+  const canShareFiles = () => {
+    try { return !!(navigator.share && navigator.canShare && navigator.canShare({ files: [new File([''], 'a.png', { type: 'image/png' })] })); } catch (e) { return false; }
+  };
+  const shareBlob = (blob, name, title) => navigator.share({ files: [new File([blob], name, { type: 'image/png' })], title });
   const say = (t) => { $('saveMsg').textContent = t; };
   const fileName = 'ramo-flores-amarillas.png';
 
@@ -244,22 +254,16 @@
     say('Preparando tu imagen…');
     try {
       const blob = await bouquetBlob();
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = fileName;
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      download(blob, fileName);
       say('Listo: tu ramo se guardó como imagen.');
     } catch (e) { say('No se pudo crear la imagen. Prueba con una captura de pantalla.'); }
   });
-  try {
-    const probe = new File([''], fileName, { type: 'image/png' });
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [probe] })) $('shareImg').hidden = false;
-  } catch (e) {}
+  if (canShareFiles()) $('shareImg').hidden = false;
   $('shareImg').addEventListener('click', async () => {
     say('Preparando tu imagen…');
     try {
       const blob = await bouquetBlob();
-      await navigator.share({ files: [new File([blob], fileName, { type: 'image/png' })], title: 'Mi ramo de flores amarillas' });
+      await shareBlob(blob, fileName, 'Mi ramo de flores amarillas');
       say('Compartido.');
     } catch (e) { say(e && e.name === 'AbortError' ? 'Compartir cancelado.' : 'No se pudo compartir. Usa “Guardar imagen”.'); }
   });
@@ -286,10 +290,21 @@
 
   /* ---------- Música (YouTube se carga solo al entrar) ---------- */
   function loadMusic() {
-    if (typeof PLAYLIST_ID === 'undefined' || !PLAYLIST_ID) return;
     const fr = $('ytFrame');
     if (!fr.src) fr.src = 'https://www.youtube.com/embed/videoseries?list=' + encodeURIComponent(PLAYLIST_ID);
     $('ytLink').href = 'https://www.youtube.com/playlist?list=' + encodeURIComponent(PLAYLIST_ID);
+  }
+  function loadSpotify() {
+    const fr = $('spFrame');
+    if (!fr.src) fr.src = 'https://open.spotify.com/embed/playlist/' + encodeURIComponent(SPOTIFY_ID) + '?utm_source=generator&theme=0';
+    $('spLink').href = 'https://open.spotify.com/playlist/' + encodeURIComponent(SPOTIFY_ID);
+  }
+  function loadMusicAll() {
+    const yt = typeof PLAYLIST_ID !== 'undefined' && PLAYLIST_ID, sp = typeof SPOTIFY_ID !== 'undefined' && SPOTIFY_ID;
+    $('ytBlock').hidden = !yt; $('spBlock').hidden = !sp;
+    if (yt) loadMusic();
+    if (sp) loadSpotify();
+    document.querySelectorAll('#music .src').forEach((l) => { l.hidden = !(yt && sp); });
   }
 
   /* ---------- Carta (se redibuja para reiniciar la animación) ---------- */
@@ -353,12 +368,12 @@
 
   /* ---------- Menú y navegación por hash ---------- */
   const FA = window.FA = {
-    $, esc, buzz, pick, pad, flowerInner, flowerSVG,
-    hooks: { letter: renderLetter, ramo: renderBouquet, music: loadMusic },
+    $, esc, buzz, pick, pad, flowerInner, flowerSVG, download, canShareFiles, shareBlob,
+    hooks: { letter: renderLetter, ramo: renderBouquet, music: loadMusicAll },
     menu: [
       { id: 'bouquet', order: 10, title: 'Nuestro ramo', text: 'Toca y siembra flores' },
       { id: 'favorites', order: 20, title: 'Todo lo que te gusta', text: 'Voltea cada tarjeta' },
-      ...(typeof PLAYLIST_ID !== 'undefined' && PLAYLIST_ID ? [{ id: 'music', order: 45, title: 'Nuestra playlist', text: 'Música para escuchar juntos' }] : []),
+      ...((typeof PLAYLIST_ID !== 'undefined' && PLAYLIST_ID) || (typeof SPOTIFY_ID !== 'undefined' && SPOTIFY_ID) ? [{ id: 'music', order: 45, title: 'Nuestra playlist', text: 'Música para escuchar juntos' }] : []),
       { id: 'letter', order: 50, title: 'Una carta para ti', text: 'Léela con calma' },
       { id: 'coupons', order: 60, title: 'Vales de regalo', text: 'Canjéalos cuando quieras' },
       { id: 'wish', order: 70, title: 'Pide un deseo', text: 'Toca la estrella' },

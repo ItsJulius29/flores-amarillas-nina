@@ -213,7 +213,7 @@ h1, .ticket b, .menu b, .wish-text { text-wrap: balance; }
 
 .tray { display: flex; gap: 6px; overflow-x: auto; padding: 16px 0 4px; scrollbar-width: none; }
 .tray::-webkit-scrollbar { display: none; }
-.prop-btn { flex: 1 1 0; min-width: 0; max-width: 56px; aspect-ratio: 1; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); transition: border-color .25s, transform .15s; }
+.prop-btn { flex: none; width: 46px; height: 46px; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); transition: border-color .25s, transform .15s; }
 .prop-btn:hover { border-color: var(--muted); }
 .prop-btn:active { transform: scale(.94); }
 .prop-btn svg { width: 100%; height: 100%; display: block; }
@@ -241,3 +241,13 @@ h1, .ticket b, .menu b, .wish-text { text-wrap: balance; }
 .video iframe { display: block; width: 100%; height: 100%; border: 0; }
 #music .btn { width: 100%; }
 .counter .days, .counter .next, .page-title, .display { font-variant-numeric: lining-nums; font-feature-settings: 'lnum' 1; }
+
+.src { margin: 6px 0 12px; }
+#ytBlock, #spBlock { margin-bottom: 34px; }
+#ytBlock[hidden], #spBlock[hidden] { display: none; }
+.spotify { height: 352px; margin-bottom: 20px; overflow: hidden; border-radius: 14px; }
+.spotify iframe { display: block; width: 100%; height: 100%; border: 0; }
+#music .btn { width: 100%; }
+.actions > .btn { width: 100%; }
+.actions > .btn[hidden] { display: none; }
+.tray { -webkit-mask-image: linear-gradient(to right, #000 90%, transparent); mask-image: linear-gradient(to right, #000 90%, transparent); }

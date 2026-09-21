@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Flores Amarillas</title>
-  <meta name="description" content="Hice esto solo para ti.">
+  <meta name="description" content="Un regalo para ti, Mochita">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Flores Amarillas">
-  <meta property="og:description" content="Hice esto solo para ti.">
+  <meta property="og:description" content="Un regalo para ti, Mochita">
   <meta property="og:url" content="https://itsjulius29.github.io/flores-amarillas-nina/">
   <meta property="og:image" content="https://itsjulius29.github.io/flores-amarillas-nina/og.png">
   <meta property="og:image:width" content="1200">
@@ -15,7 +15,7 @@
   <meta property="og:locale" content="es_PE">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Flores Amarillas">
-  <meta name="twitter:description" content="Hice esto solo para ti.">
+  <meta name="twitter:description" content="Un regalo para ti, Mochita">
   <meta name="twitter:image" content="https://itsjulius29.github.io/flores-amarillas-nina/og.png">
   <meta name="theme-color" content="#0D0A12">
   <meta name="color-scheme" content="dark">
@@ -101,8 +101,12 @@
         <div class="pair">
           <button class="btn sm" id="removeProp" disabled>Quitar</button>
           <button class="btn sm" id="resetWorld">Reiniciar</button>
+        </div>
+        <div class="pair">
+          <button class="btn sm" id="saveWorld">Guardar imagen</button>
           <button class="btn btn-fill sm" id="customize">Personalizar</button>
         </div>
+        <button class="btn sm" id="shareWorld" hidden>Compartir</button>
       </div>
     </div>
   </section>
@@ -112,8 +116,16 @@
     <div class="col">
       <h1 class="page-title">Nuestra <em>playlist</em></h1>
       <p class="hint">Dale play y disfruta la música</p>
-      <div class="video"><iframe id="ytFrame" title="Nuestra playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
-      <a class="btn" id="ytLink" href="#" target="_blank" rel="noopener">Abrir en YouTube</a>
+      <div id="ytBlock">
+        <p class="label src">YouTube</p>
+        <div class="video"><iframe id="ytFrame" title="Nuestra playlist en YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <a class="btn" id="ytLink" href="#" target="_blank" rel="noopener">Abrir en YouTube</a>
+      </div>
+      <div id="spBlock">
+        <p class="label src">Spotify</p>
+        <div class="spotify"><iframe id="spFrame" title="Nuestra playlist en Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <a class="btn" id="spLink" href="#" target="_blank" rel="noopener">Abrir en Spotify</a>
+      </div>
     </div>
   </section>
 
