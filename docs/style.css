@@ -251,3 +251,28 @@ h1, .ticket b, .menu b, .wish-text { text-wrap: balance; }
 .actions > .btn { width: 100%; }
 .actions > .btn[hidden] { display: none; }
 .tray { -webkit-mask-image: linear-gradient(to right, #000 90%, transparent); mask-image: linear-gradient(to right, #000 90%, transparent); }
+
+/* Tarjeta con foto */
+.front.photo { border-color: transparent; background: linear-gradient(to top, rgba(13, 10, 18, .88), rgba(13, 10, 18, 0) 58%), var(--photo) 50% 30% / cover no-repeat; }
+.front.photo .num { color: rgba(244, 239, 248, .85); text-shadow: 0 1px 6px rgba(13, 10, 18, .7); }
+
+/* Manos entrelazadas */
+.char.hold-l .arm-r { transform: rotate(-18deg); }
+.char.hold-r .arm-l { transform: rotate(18deg); }
+.char .arm { transition: transform .35s var(--ease); }
+.clasp { position: absolute; z-index: 900; translate: -50% -50%; pointer-events: none; animation: bloom .4s var(--ease) both; }
+.clasp svg { display: block; }
+
+/* Japón */
+.stage[data-scene="japan"] { background: linear-gradient(#1B1030 0%, #4B2F7A 38%, #B0709F 60%, #F0B9BF 73%); }
+.stage[data-scene="japan"]::after { background: #1A0B2E; }
+.jp { position: absolute; display: block; pointer-events: none; }
+.jp-sun { height: 27%; left: 56%; top: 13%; }
+.jp-fuji { height: 40%; left: 50%; bottom: 27%; translate: -50% 0; }
+.jp-torii { height: 33%; left: 4%; bottom: 25%; }
+.jp-branch { width: min(64%, 440px); right: 0; top: 0; }
+.flake.sakura { background: #F6B8C8; border-radius: 70% 0 70% 0; opacity: .9; animation-name: sakura; }
+@keyframes sakura { from { transform: translate(0, -10px) rotate(0); } to { transform: translate(var(--sw), var(--drop, 400px)) rotate(320deg); } }
+.jp-sun { left: 47%; top: 11%; }
+.jp-fuji { left: 74%; }
+#sceneChips .chip { padding: 7px 11px; letter-spacing: .07em; font-size: .68rem; }

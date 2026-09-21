@@ -271,7 +271,7 @@
   /* ---------- Favoritos: solo una tarjeta volteada a la vez ---------- */
   $('favGrid').innerHTML = FAVORITES.map((f, i) =>
     '<div class="flip" role="button" tabindex="0" aria-pressed="false"><div class="flip-inner">' +
-    '<div class="face front"><span class="num">' + pad(i) + '</span><b>' + esc(f.title) + '</b></div>' +
+    '<div class="face front' + (f.photo ? ' photo' : '') + '"' + (f.photo ? ' style="--photo:url(\'' + esc(f.photo) + '\')"' : '') + '><span class="num">' + pad(i) + '</span><b>' + esc(f.title) + '</b></div>' +
     '<div class="face back-face"><span>' + esc(f.back) + '</span>' +
     (f.link ? '<a href="' + esc(f.link) + '" target="_blank" rel="noopener">Escuchar ↗</a>' : '') + '</div></div></div>'
   ).join('');

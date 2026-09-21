@@ -149,9 +149,9 @@
 
   /* ---------- Escenario ---------- */
   const stage = $('stage');
-  const SCENES = [['winter', 'Invierno'], ['dusk', 'Atardecer'], ['garden', 'Jardín']];
+  const SCENES = [['winter', 'Invierno'], ['dusk', 'Atardecer'], ['garden', 'Jardín'], ['japan', 'Japón']];
   const chars = {};
-  let z = 10, selected = null, inited = false, lastHug = 0, drag = null;
+  let z = 10, selected = null, inited = false, lastHug = 0, drag = null, holding = false, clasp = null;
 
   function setPos(el, cx, cy) {
     const r = stage.getBoundingClientRect();
@@ -184,15 +184,53 @@
     heartsAt(c.x, c.y - el.offsetHeight / 2);
     buzz(12);
   }
-  function checkHug() {
-    const a = chars.her, b = chars.him, ca = center(a), cb = center(b);
-    const close = Math.hypot(ca.x - cb.x, ca.y - cb.y) < Math.min(a.offsetWidth, b.offsetWidth) * 0.9;
-    if (close && Date.now() - lastHug > 3500) {
-      lastHug = Date.now();
-      happy(a); happy(b);
-      heartsAt((ca.x + cb.x) / 2, Math.min(ca.y, cb.y) - 40);
-      buzz([20, 40, 20]);
+  // Tomados de la mano: al acercarse, quedan lado a lado (imán) con los brazos hacia el centro
+  const HOLD = 0.69;                  // separación de centros = ancho * HOLD
+  const HAND_Y = 134.4 / 170;         // altura de la mano con el brazo levantado
+  const leftRight = () => (center(chars.her).x <= center(chars.him).x ? [chars.her, chars.him] : [chars.him, chars.her]);
+  function placeClasp() {
+    if (!holding) { if (clasp) { clasp.remove(); clasp = null; } return; }
+    const [L, R] = leftRight(), cl = center(L), cr = center(R), s = L.offsetWidth / 120;
+    if (!clasp) { clasp = document.createElement('div'); clasp.className = 'clasp'; stage.appendChild(clasp); }
+    clasp.style.left = (cl.x + cr.x) / 2 + 'px';
+    clasp.style.top = (cl.y + cr.y) / 2 - L.offsetHeight / 2 + L.offsetHeight * HAND_Y + 'px';
+    clasp.dataset.s = s;
+    clasp.innerHTML = '<svg viewBox="0 0 22 14" style="width:' + 22 * s + 'px;height:' + 14 * s + 'px"><circle cx="7" cy="7" r="6.6" fill="' + cfg[L.dataset.id].skin + '"/><circle cx="15" cy="7" r="6.6" fill="' + cfg[R.dataset.id].skin + '"/></svg>';
+  }
+  function setHold(on, celebrate) {
+    if (on !== holding) {
+      holding = on;
+      ['her', 'him'].forEach((k) => chars[k].classList.remove('hold-l', 'hold-r'));
+      if (on) { const [L, R] = leftRight(); L.classList.add('hold-l'); R.classList.add('hold-r'); }
+      if (on && celebrate && Date.now() - lastHug > 3500) {
+        lastHug = Date.now();
+        happy(chars.her); happy(chars.him);
+        const a = center(chars.her), b = center(chars.him);
+        heartsAt((a.x + b.x) / 2, Math.min(a.y, b.y) - 40);
+        buzz([20, 40, 20]);
+      }
+    } else if (on) {
+      const [L, R] = leftRight();
+      chars.her.classList.remove('hold-l', 'hold-r'); chars.him.classList.remove('hold-l', 'hold-r');
+      L.classList.add('hold-l'); R.classList.add('hold-r');
     }
+    placeClasp();
+  }
+  function updateHold(el) {
+    const other = el === chars.her ? chars.him : chars.her;
+    const s = stage.getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight, ce = center(el), co = center(other);
+    const want = w * HOLD, dx = ce.x - co.x, dy = ce.y - co.y;
+    if (Math.abs(Math.abs(dx) - want) < w * 0.3 && Math.abs(dy) < h * 0.25) {
+      const x = co.x + (dx >= 0 ? 1 : -1) * want;
+      if (x - w / 2 >= 0 && x + w / 2 <= s.width) { setPos(el, x, co.y); setHold(true, true); return; }
+    }
+    setHold(false);
+  }
+  // reagrupa a la pareja alrededor de su punto medio (al girar el celular o cambiar el tamaño)
+  function regroup(midX, y) {
+    const S = stage.getBoundingClientRect(), d = chars.her.offsetWidth * HOLD;
+    setPos(chars.her, midX - d / 2, y); setPos(chars.him, midX + d / 2, y);
+    holding = false; setHold(true, false);
   }
   function select(el) {
     if (selected) selected.classList.remove('sel');
@@ -217,8 +255,30 @@
     return el;
   }
   function placeChars() {
-    if (chars.her) { chars.her.style.left = '32%'; chars.her.style.top = '64%'; }
-    if (chars.him) { chars.him.style.left = '68%'; chars.him.style.top = '64%'; }
+    const S = stage.getBoundingClientRect();
+    regroup(S.width / 2, S.height * 0.64);
+  }
+  window.addEventListener('resize', () => {
+    if (!inited || !holding) return;
+    const a = center(chars.her), b = center(chars.him);
+    regroup((a.x + b.x) / 2, (a.y + b.y) / 2);
+  });
+
+  const blossom = (x, y, r, rot) => {
+    let p = '';
+    for (let i = 0; i < 5; i++) p += '<ellipse cx="0" cy="' + -r * 0.62 + '" rx="' + r * 0.5 + '" ry="' + r * 0.62 + '" fill="#F6C3D0" transform="rotate(' + i * 72 + ')"/>';
+    return '<g transform="translate(' + x + ' ' + y + ') rotate(' + rot + ')">' + p + '<circle r="' + r * 0.22 + '" fill="#E58BA6"/></g>';
+  };
+  function japanDeco() {
+    const sun = '<svg class="jp jp-sun" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#DE4A5E"/></svg>';
+    const fuji = '<svg class="jp jp-fuji" viewBox="0 0 420 120"><path d="M0 120 L70 70 Q88 60 106 72 L170 120Z" fill="#3B2766"/><path d="M250 120 L318 66 Q338 54 358 68 L420 112 V120Z" fill="#3B2766"/>' +
+      '<path d="M78 120 L164 52 Q190 30 210 26 Q230 30 256 52 L342 120Z" fill="#2B1A4A"/><path d="M164 52 Q190 30 210 26 Q230 30 256 52 L242 58 L226 48 L214 62 L200 47 L186 62 L174 50Z" fill="#E9DBFB"/></svg>';
+    const torii = '<svg class="jp jp-torii" viewBox="0 0 100 90"><rect x="19" y="24" width="7" height="66" fill="#D0343F"/><rect x="74" y="24" width="7" height="66" fill="#D0343F"/>' +
+      '<rect x="14" y="36" width="72" height="6" fill="#D0343F"/><path d="M2 12 Q50 24 98 12 L98 22 Q50 34 2 22Z" fill="#D0343F"/><rect x="45" y="24" width="10" height="12" fill="#D0343F"/></svg>';
+    const b = [[196, 22, 13, 10], [170, 34, 11, 40], [150, 52, 14, 0], [128, 64, 10, 25], [104, 78, 12, 60], [78, 84, 11, 15], [188, 46, 10, 30], [214, 32, 9, 5], [116, 88, 9, 45]];
+    const branch = '<svg class="jp jp-branch" viewBox="0 0 240 110"><g fill="none" stroke="#4A2E22" stroke-linecap="round"><path d="M244 6 C206 16 176 30 146 52 C124 68 100 80 66 86" stroke-width="4.5"/>' +
+      '<path d="M176 30 C168 44 160 52 150 58 M120 66 C114 78 104 84 96 90 M206 16 C204 30 198 40 190 46" stroke-width="3"/></g>' + b.map((p) => blossom(p[0], p[1], p[2], p[3])).join('') + '</svg>';
+    return sun + fuji + torii + branch;
   }
 
   function setScene(id) {
@@ -241,6 +301,13 @@
         const w = 20 + Math.random() * 16;
         html += '<span class="gf" style="left:' + Math.random() * 96 + '%;bottom:' + (1 + Math.random() * 20) + '%;width:' + w + 'px;height:' + w + 'px;transform:rotate(' + Math.floor(Math.random() * 360) + 'deg)">' + flowerSVG(pick(['yellow', 'yellow', 'lilac', 'rose'])) + '</span>';
       }
+    }
+    if (id === 'japan') {
+      html += japanDeco();
+      for (let i = 0; i < 20; i++) {
+        html += '<i class="flake sakura" style="left:' + Math.random() * 100 + '%;width:' + (5 + Math.random() * 4) + 'px;height:' + (6 + Math.random() * 4) + 'px;--sw:' + Math.round((Math.random() - 0.5) * 60) + 'px;animation-duration:' + (9 + Math.random() * 8) + 's;animation-delay:-' + Math.random() * 14 + 's"></i>';
+      }
+      deco.style.setProperty('--drop', Math.round(r.height) + 'px');
     }
     deco.innerHTML = html;
     stage.insertBefore(deco, stage.firstChild);
@@ -269,7 +336,7 @@
     setPos(el, cx, cy);
     el.style.setProperty('--tilt', Math.max(-9, Math.min(9, (e.clientX - drag.lx) * 1.4)) + 'deg');
     drag.lx = e.clientX;
-    if (el.dataset.kind === 'char') checkHug();
+    if (el.dataset.kind === 'char') updateHold(el);
   });
   function endDrag() {
     if (!drag) return;
@@ -337,6 +404,10 @@
       }
       return { el, isChar, img: await svgToImage(svg, svg.getAttribute('viewBox'), 400, 400) };
     }));
+    const jps = scene === 'japan' ? await Promise.all(Array.from(stage.querySelectorAll('.jp')).map(async (el) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left - sr.left, y: r.top - sr.top, w: r.width, h: r.height, img: await svgToImage(el, el.getAttribute('viewBox'), Math.round(r.width * 4), Math.round(r.height * 4)) };
+    })) : [];
     const gardens = scene === 'garden' ? await Promise.all(Array.from(stage.querySelectorAll('.gf')).map(async (gf) => ({
       gf, img: await svgToImage(gf.querySelector('svg'), '0 0 100 100', 200, 200),
     }))) : [];
@@ -355,6 +426,7 @@
     const top = SH * 0.73, gh = SH - top, bg = g.createLinearGradient(0, 0, 0, SH);
     if (scene === 'winter') { bg.addColorStop(0, '#0F0B18'); bg.addColorStop(1, '#2A1A45'); }
     else if (scene === 'dusk') { bg.addColorStop(0, '#2A1245'); bg.addColorStop(0.52, '#7A4BC4'); bg.addColorStop(0.73, '#F2C94C'); bg.addColorStop(1, '#F2C94C'); }
+    else if (scene === 'japan') { bg.addColorStop(0, '#1B1030'); bg.addColorStop(0.38, '#4B2F7A'); bg.addColorStop(0.6, '#B0709F'); bg.addColorStop(0.73, '#F0B9BF'); bg.addColorStop(1, '#F0B9BF'); }
     else { bg.addColorStop(0, '#150F1E'); bg.addColorStop(1, '#2F2140'); }
     g.fillStyle = bg; g.fillRect(0, 0, SW, SH);
     if (scene === 'winter') {
@@ -362,7 +434,12 @@
       for (let i = 0; i < 30; i++) { g.beginPath(); g.arc(((i * 137) % 100) / 100 * SW, ((i * 61) % 72) / 100 * SH, 1 + (i % 3) * 0.7, 0, 7); g.fill(); }
       g.fillStyle = '#DCD3EB'; curvedTop(g, 0, top, SW, gh, 14);
     } else if (scene === 'dusk') { g.fillStyle = '#1A0B2E'; g.fillRect(0, top, SW, gh); }
-    else { g.fillStyle = '#34503A'; curvedTop(g, 0, top, SW, gh, 12); }
+    else if (scene === 'japan') {
+      jps.forEach((j) => g.drawImage(j.img, j.x, j.y, j.w, j.h));
+      g.fillStyle = 'rgba(246,184,200,.85)';
+      for (let i = 0; i < 22; i++) { g.beginPath(); g.ellipse(((i * 151) % 100) / 100 * SW, ((i * 47) % 72) / 100 * SH, 3.2, 4.4, i, 0, 7); g.fill(); }
+      g.fillStyle = '#1A0B2E'; g.fillRect(0, top, SW, gh);
+    } else { g.fillStyle = '#34503A'; curvedTop(g, 0, top, SW, gh, 12); }
     gardens.forEach(({ gf, img }) => {
       const w = parseFloat(gf.style.width), cx = parseFloat(gf.style.left) / 100 * SW + w / 2, cy = SH - parseFloat(gf.style.bottom) / 100 * SH - w / 2;
       const rot = parseFloat((gf.style.transform.match(/rotate\(([-\d.]+)deg/) || [0, 0])[1]) * Math.PI / 180;
@@ -379,6 +456,11 @@
         g.shadowColor = 'transparent'; g.shadowBlur = 0;
       } else g.drawImage(img, cx - w / 2, cy - h / 2, w, h);
     });
+    if (holding && clasp) {
+      const s = parseFloat(clasp.dataset.s), cx = parseFloat(clasp.style.left), cy = parseFloat(clasp.style.top), [L, R] = leftRight();
+      g.fillStyle = cfg[L.dataset.id].skin; g.beginPath(); g.arc(cx - 4 * s, cy, 6.6 * s, 0, 7); g.fill();
+      g.fillStyle = cfg[R.dataset.id].skin; g.beginPath(); g.arc(cx + 4 * s, cy, 6.6 * s, 0, 7); g.fill();
+    }
     g.restore();
     g.strokeStyle = 'rgba(244,239,248,.14)'; g.lineWidth = 2;
     g.beginPath(); g.roundRect ? g.roundRect(M, M, W - 2 * M, sh, 40) : g.rect(M, M, W - 2 * M, sh); g.stroke();
@@ -447,7 +529,8 @@
     if (inited) return;
     inited = true;
     setScene('winter');
-    makeActor('char', 'her', 32, 64);
-    makeActor('char', 'him', 68, 64);
+    makeActor('char', 'her', 46, 64);
+    makeActor('char', 'him', 54, 64);
+    placeChars();
   };
 })();

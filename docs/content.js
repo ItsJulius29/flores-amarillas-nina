@@ -26,6 +26,7 @@ const FAVORITES = [
   { emoji: '🍓', title: 'Tu postre', back: 'Mil hojas con crema pastelera y fresas. Mi cita ideal: tú y un mil hojas.' },
   { emoji: '🎬', title: 'Tu película', back: 'Shrek 2. Contigo hasta el "felices para siempre".' },
   { emoji: '🌹', title: 'Tus flores', back: 'Rosas blancas con florecitas moradas delgaditas. Hoy te toca ramo amarillo 💛' },
+  { title: 'Nino', back: 'Tu Nino: el que siempre te busca la mano y nunca se cansa de mirarte.', photo: 'img/nino.jpg' },
 ];
 
 const COUPONS = [
